@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>CACAO-2 — Univers Cacao & Chocolat</title>
+<!-- Photos réelles : images de stock Pexels et source cacao, chargées en ligne. -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -377,12 +378,13 @@ h2,h3{color:var(--cacao)}
 .machine-price{color:#a34d23;font-size:21px}
 .machine-earning{color:#287447}
 .machine .btn-primary{margin:10px 18px 18px;width:calc(100% - 36px)}
-.machine-art{height:145px;display:flex;align-items:center;justify-content:center;gap:13px;padding:12px;background:radial-gradient(circle at 25% 20%,#fff2c9 0%,transparent 35%),linear-gradient(125deg,#f5d49b,#e8a75c 48%,#7c4329 100%);position:relative;overflow:hidden}
-.machine-art:after{content:"CACAO • CHOCOLAT";position:absolute;right:10px;bottom:8px;color:rgba(75,36,24,.55);font-size:9px;font-weight:900;letter-spacing:1.5px}
-.machine-art svg{height:112px;width:auto;filter:drop-shadow(0 6px 5px rgba(60,25,12,.18))}
-.machine-art .pod{width:57%}.machine-art .bar{width:35%}
-.machine:nth-child(3n+2) .machine-art{background:radial-gradient(circle at 80% 20%,#fff1bd 0%,transparent 35%),linear-gradient(125deg,#d8e7bd,#9dbb75 45%,#70402b)}
-.machine:nth-child(3n) .machine-art{background:radial-gradient(circle at 20% 15%,#fff1d3 0%,transparent 35%),linear-gradient(125deg,#f7c98d,#c77b43 48%,#4b2418)}
+.machine-photo-wrap{height:178px;position:relative;overflow:hidden;background:linear-gradient(135deg,#3b2118,#a86a32 55%,#d8a84e)}
+.machine-photo{display:block;width:100%;height:100%;object-fit:cover;transition:transform .35s ease}
+.machine:hover .machine-photo{transform:scale(1.045)}
+.machine-photo-wrap:after{content:"CACAO-2";position:absolute;right:10px;bottom:9px;padding:5px 9px;border-radius:20px;background:rgba(45,23,15,.78);color:#fff2cf;font-size:10px;font-weight:900;letter-spacing:1.3px}
+.machine-photo-wrap.photo-unavailable:before{content:"PHOTO CACAO";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff2cf;font-weight:900;letter-spacing:2px;font-size:13px}
+.machine h3{color:#57301f}
+.machine .machine-category{margin:-5px 18px 8px;color:#9a6a38;font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase}
 .stats .stat{background:linear-gradient(135deg,#4b2418,#875034 65%,#c17a35);box-shadow:0 7px 18px rgba(75,36,24,.14)}
 .stats .stat:nth-child(2){background:linear-gradient(135deg,#287447,#4a9a61)}
 .stats .stat:nth-child(3){background:linear-gradient(135deg,#d66b2b,#ef9a3c)}
@@ -402,7 +404,7 @@ table{width:100%;border-collapse:collapse;min-width:620px}
 th{background:#4b2418;color:#fff}
 td,th{padding:10px 12px;text-align:left;border-bottom:1px solid #eee2d5}
 tr:nth-child(even) td{background:#fffaf3}
-@media(max-width:600px){.container{padding:12px}.machine-grid{grid-template-columns:1fr 1fr;gap:10px}.machine h3{font-size:15px;padding:0 11px}.machine-price,.machine-earning{font-size:13px;margin:8px 11px}.machine .btn-primary{margin:8px 10px 13px;width:calc(100% - 20px);padding:10px 6px;font-size:12px}.machine-art{height:105px;gap:5px}.machine-art svg{height:80px}.admin-referral-stat strong{font-size:19px}}
+@media(max-width:600px){.container{padding:12px}.machine-grid{grid-template-columns:1fr 1fr;gap:10px}.machine h3{font-size:15px;padding:0 11px}.machine-price,.machine-earning{font-size:13px;margin:8px 11px}.machine .btn-primary{margin:8px 10px 13px;width:calc(100% - 20px);padding:10px 6px;font-size:12px}.machine-photo-wrap{height:122px}.machine .machine-category{margin:-4px 11px 7px;font-size:9px}.admin-referral-stat strong{font-size:19px}}
 
 </style>
 </head>
@@ -1432,6 +1434,28 @@ function updateDashboard(){
    MACHINES
 ========================================================= */
 
+const MACHINE_PRESENTATION = [
+    { name:"PRESTIGE", code:"MACHINE 1", photo:"https://images.pexels.com/photos/37062650/pexels-photo-37062650.jpeg?auto=compress&cs=tinysrgb&w=1200", alt:"Photographie réelle de cabosses de cacao mûres sur un cacaoyer", category:"CABOSSES MÛRES" },
+    { name:"PRIVILEGE", code:"MACHINE 2", photo:"https://images.pexels.com/photos/31550612/pexels-photo-31550612.jpeg?auto=compress&cs=tinysrgb&w=1200", alt:"Photographie réelle de cabosse de cacao ouverte et fèves blanches", category:"FÈVES FRAÎCHES" },
+    { name:"CACAO VIP", code:"MACHINE 3", photo:"https://images.pexels.com/photos/6261691/pexels-photo-6261691.jpeg?auto=compress&cs=tinysrgb&w=1200", alt:"Photographie réelle de morceaux de chocolat noir et poudre de cacao", category:"CACAO & CHOCOLAT" },
+    { name:"CHOCOLATEE", code:"MACHINE 4", photo:"https://images.pexels.com/photos/4113302/pexels-photo-4113302.jpeg?auto=compress&cs=tinysrgb&w=1200", alt:"Photographie réelle de morceaux de chocolat noir et blanc", category:"CHOCOLATS" },
+    { name:"PREMIUM QUALITY", code:"MACHINE 5", photo:"https://images.pexels.com/photos/4113294/pexels-photo-4113294.jpeg?auto=compress&cs=tinysrgb&w=1200", alt:"Photographie réelle de tablettes de chocolat noir", category:"TABLETTES PREMIUM" },
+    { name:"CACAO VERT", code:"MACHINE A1", photo:"https://images.pexels.com/photos/14436364/pexels-photo-14436364.jpeg?auto=compress&cs=tinysrgb&w=1200", alt:"Photographie réelle de cabosses de cacao vertes sur un arbre", category:"CABOSSES VERTES" },
+    { name:"CACAO ORANGE", code:"MACHINE A2", photo:"https://images.pexels.com/photos/7450070/pexels-photo-7450070.jpeg?auto=compress&cs=tinysrgb&w=1200", alt:"Photographie réelle de cabosses de cacao mûres sur un cacaoyer", category:"CABOSSES ORANGE" },
+    { name:"CACAO MOYE", code:"MACHINE A3", photo:"https://www.desapega.nl/cdn/shop/articles/svkqnxtb49waxyo1qcyy_3a3e942d-e77f-409c-983c-28b6b4261d54.webp?v=1774945948&width=1100", alt:"Photographie réelle de poudre de cacao et fèves", category:"CACAO EN POUDRE" }
+];
+
+function machinePresentation(machine){
+    const index = machines.findIndex(item => Number(item.id) === Number(machine.id));
+    return MACHINE_PRESENTATION[index] || {
+        name: machine.name,
+        code: "MACHINE",
+        photo: "",
+        alt: "Photographie de cacao non disponible",
+        category: "UNIVERS CACAO"
+    };
+}
+
 async function loadMachines(){
 
     const {data,error} =
@@ -1475,25 +1499,13 @@ async function loadMachines(){
 
         div.className = "machine";
 
+        const presentation = machinePresentation(machine);
         div.innerHTML = `
-            <div class="machine-art" aria-label="Illustration de cabosse de cacao et tablette de chocolat">
-              <svg class="pod" viewBox="0 0 180 110" role="img" aria-label="Cabosse de cacao">
-                <path d="M21 57 C31 18 76 5 112 23 C148 41 159 74 131 91 C99 111 47 99 27 78 C21 71 18 64 21 57Z" fill="#7c3f20" stroke="#4b2418" stroke-width="5"/>
-                <path d="M35 57 C50 30 86 21 118 36 C137 46 143 65 125 80 C101 97 60 88 39 73Z" fill="#d88a35" stroke="#f5c46e" stroke-width="4"/>
-                <path d="M45 57 Q83 25 125 48 Q94 47 48 75" fill="none" stroke="#f8d18a" stroke-width="5" stroke-linecap="round"/>
-                <path d="M85 19 Q89 8 105 5" fill="none" stroke="#426b36" stroke-width="8" stroke-linecap="round"/>
-                <path d="M80 21 Q70 7 56 12 Q67 25 80 21Z" fill="#4c8b4e"/>
-              </svg>
-              <svg class="bar" viewBox="0 0 100 120" role="img" aria-label="Tablette de chocolat">
-                <path d="M12 9 Q12 3 19 3 H83 Q90 3 90 10 V109 Q90 116 83 116 H18 Q11 116 11 109Z" fill="#542719" stroke="#3a1b13" stroke-width="4"/>
-                <g fill="#98512f" stroke="#c17a48" stroke-width="2">
-                  <rect x="20" y="14" width="27" height="25" rx="4"/><rect x="53" y="14" width="28" height="25" rx="4"/>
-                  <rect x="20" y="45" width="27" height="25" rx="4"/><rect x="53" y="45" width="28" height="25" rx="4"/>
-                  <rect x="20" y="76" width="27" height="25" rx="4"/><rect x="53" y="76" width="28" height="25" rx="4"/>
-                </g>
-              </svg>
+            <div class="machine-photo-wrap" aria-label="${escapeHtml(presentation.alt)}">
+              ${presentation.photo ? `<img class="machine-photo" src="${presentation.photo}" alt="${escapeHtml(presentation.alt)}" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none';this.parentElement.classList.add('photo-unavailable')">` : `<div class="photo-unavailable"></div>`}
             </div>
-            <h3>⚙️ ${escapeHtml(machine.name)}</h3>
+            <h3>${escapeHtml(presentation.code)} : ${escapeHtml(presentation.name)}</h3>
+            <p class="machine-category">${escapeHtml(presentation.category)}</p>
             <p class="machine-price">Prix : ${money(machine.price)}</p>
             <p class="machine-earning">💰 Gain journalier : ${money(machine.daily_earning)}</p>
             <button class="btn-primary" onclick="selectMachine(${machine.id})">Choisir cette machine</button>
@@ -1508,7 +1520,7 @@ async function loadMachines(){
         option.value = machine.id;
 
         option.textContent =
-            `${machine.name} - ${money(machine.price)}`;
+            `${presentation.code} : ${presentation.name} - ${money(machine.price)}`;
 
         select.appendChild(option);
 
@@ -1597,9 +1609,10 @@ function updateDepositMachineInfo(){
 
     }
 
+    const presentation = machinePresentation(machine);
     info.innerHTML = `
 
-        <strong>${escapeHtml(machine.name)}</strong><br>
+        <strong>${escapeHtml(presentation.code)} : ${escapeHtml(presentation.name)}</strong><br>
 
         Prix du dépôt :
         <strong>${money(machine.price)}</strong>
