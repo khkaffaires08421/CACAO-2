@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>CACAO - Plateforme</title>
+<title>CACAO-2 — Univers Cacao & Chocolat</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -351,6 +351,59 @@ footer{
         padding:14px;
     }
 }
+
+
+/* =========================================================
+   IDENTITE VISUELLE CACAO-2 — THEME CHOCOLAT & CACAO
+========================================================= */
+:root{
+  --cacao:#4b2418;--chocolate:#6b3525;--gold:#f2b84b;
+  --leaf:#287447;--orange:#e97832;--cream:#fff7e9;
+}
+body{background:linear-gradient(145deg,#fff8ec 0%,#f7eee1 48%,#edf5ed 100%);color:#35231c}
+header{background:linear-gradient(115deg,#3b1c15 0%,#70402b 48%,#287447 100%);box-shadow:0 5px 20px rgba(59,28,21,.22);position:relative;overflow:hidden}
+header:after{content:"";position:absolute;width:190px;height:190px;right:-45px;top:-105px;border:22px solid rgba(255,255,255,.09);border-radius:50%}
+header h1{letter-spacing:.7px;text-shadow:0 2px 8px rgba(0,0,0,.25)}
+h2,h3{color:var(--cacao)}
+.card{border:1px solid rgba(111,64,43,.10);box-shadow:0 8px 24px rgba(75,36,24,.08);border-radius:18px}
+.btn-primary{background:linear-gradient(110deg,#287447,#3d9a5d);box-shadow:0 4px 10px rgba(40,116,71,.18)}
+.btn-primary:hover{filter:brightness(1.06);transform:translateY(-1px)}
+.btn-secondary{background:linear-gradient(110deg,#70402b,#92573b)}
+.machine-grid{grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:19px}
+.machine{position:relative;overflow:hidden;border:1px solid #ead8c3;border-radius:19px;padding:0;background:linear-gradient(160deg,#fff 0%,#fff9ef 100%);box-shadow:0 8px 22px rgba(75,36,24,.10);transition:transform .2s ease,box-shadow .2s ease}
+.machine:hover{transform:translateY(-4px);box-shadow:0 14px 28px rgba(75,36,24,.16)}
+.machine h3{padding:0 18px;margin:15px 0 10px;font-size:19px}
+.machine-price,.machine-earning{margin:10px 18px}
+.machine-price{color:#a34d23;font-size:21px}
+.machine-earning{color:#287447}
+.machine .btn-primary{margin:10px 18px 18px;width:calc(100% - 36px)}
+.machine-art{height:145px;display:flex;align-items:center;justify-content:center;gap:13px;padding:12px;background:radial-gradient(circle at 25% 20%,#fff2c9 0%,transparent 35%),linear-gradient(125deg,#f5d49b,#e8a75c 48%,#7c4329 100%);position:relative;overflow:hidden}
+.machine-art:after{content:"CACAO • CHOCOLAT";position:absolute;right:10px;bottom:8px;color:rgba(75,36,24,.55);font-size:9px;font-weight:900;letter-spacing:1.5px}
+.machine-art svg{height:112px;width:auto;filter:drop-shadow(0 6px 5px rgba(60,25,12,.18))}
+.machine-art .pod{width:57%}.machine-art .bar{width:35%}
+.machine:nth-child(3n+2) .machine-art{background:radial-gradient(circle at 80% 20%,#fff1bd 0%,transparent 35%),linear-gradient(125deg,#d8e7bd,#9dbb75 45%,#70402b)}
+.machine:nth-child(3n) .machine-art{background:radial-gradient(circle at 20% 15%,#fff1d3 0%,transparent 35%),linear-gradient(125deg,#f7c98d,#c77b43 48%,#4b2418)}
+.stats .stat{background:linear-gradient(135deg,#4b2418,#875034 65%,#c17a35);box-shadow:0 7px 18px rgba(75,36,24,.14)}
+.stats .stat:nth-child(2){background:linear-gradient(135deg,#287447,#4a9a61)}
+.stats .stat:nth-child(3){background:linear-gradient(135deg,#d66b2b,#ef9a3c)}
+.stats .stat:nth-child(4){background:linear-gradient(135deg,#6c438c,#9870b7)}
+.admin-referral-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:15px 0}
+.admin-referral-stat{padding:17px;border-radius:15px;color:#fff;background:linear-gradient(135deg,#4b2418,#875034);box-shadow:0 6px 16px rgba(75,36,24,.12)}
+.admin-referral-stat:nth-child(2){background:linear-gradient(135deg,#287447,#4a9a61)}
+.admin-referral-stat:nth-child(3){background:linear-gradient(135deg,#d66b2b,#ef9a3c)}
+.admin-referral-stat:nth-child(4){background:linear-gradient(135deg,#65417e,#9470b2)}
+.admin-referral-stat span{display:block;font-size:13px;opacity:.92}
+.admin-referral-stat strong{display:block;font-size:23px;margin-top:8px;overflow-wrap:anywhere}
+.referral-bar{height:9px;background:#f0e5d8;border-radius:20px;overflow:hidden;min-width:90px}
+.referral-bar span{display:block;height:100%;border-radius:20px;background:linear-gradient(90deg,#287447,#e5a33b)}
+.admin-subtitle{margin:22px 0 10px;color:#70402b;font-size:17px}
+table{width:100%;border-collapse:collapse;min-width:620px}
+.table-wrap{overflow-x:auto;border-radius:12px}
+th{background:#4b2418;color:#fff}
+td,th{padding:10px 12px;text-align:left;border-bottom:1px solid #eee2d5}
+tr:nth-child(even) td{background:#fffaf3}
+@media(max-width:600px){.container{padding:12px}.machine-grid{grid-template-columns:1fr 1fr;gap:10px}.machine h3{font-size:15px;padding:0 11px}.machine-price,.machine-earning{font-size:13px;margin:8px 11px}.machine .btn-primary{margin:8px 10px 13px;width:calc(100% - 20px);padding:10px 6px;font-size:12px}.machine-art{height:105px;gap:5px}.machine-art svg{height:80px}.admin-referral-stat strong{font-size:19px}}
+
 </style>
 </head>
 
@@ -815,6 +868,20 @@ footer{
                 onclick="logoutUser()">
             Déconnexion
         </button>
+
+    </div>
+
+
+    <div class="card" id="adminReferralDashboard">
+
+        <h2>🍫 Tableau de bord du parrainage</h2>
+        <p>Suivi des parrains, des filleuls, des dépôts générés et des commissions distribuées.</p>
+        <button class="btn-secondary" onclick="loadAdminReferralDashboard()">🔄 Actualiser les statistiques</button>
+        <div id="adminReferralStats" class="admin-referral-grid">Chargement des statistiques...</div>
+        <h3 class="admin-subtitle">🏆 Résultats par parrain</h3>
+        <div id="adminReferralBySponsor">Chargement...</div>
+        <h3 class="admin-subtitle">📋 Historique des commissions</h3>
+        <div id="adminReferralHistory">Chargement...</div>
 
     </div>
 
@@ -1409,26 +1476,27 @@ async function loadMachines(){
         div.className = "machine";
 
         div.innerHTML = `
-
+            <div class="machine-art" aria-label="Illustration de cabosse de cacao et tablette de chocolat">
+              <svg class="pod" viewBox="0 0 180 110" role="img" aria-label="Cabosse de cacao">
+                <path d="M21 57 C31 18 76 5 112 23 C148 41 159 74 131 91 C99 111 47 99 27 78 C21 71 18 64 21 57Z" fill="#7c3f20" stroke="#4b2418" stroke-width="5"/>
+                <path d="M35 57 C50 30 86 21 118 36 C137 46 143 65 125 80 C101 97 60 88 39 73Z" fill="#d88a35" stroke="#f5c46e" stroke-width="4"/>
+                <path d="M45 57 Q83 25 125 48 Q94 47 48 75" fill="none" stroke="#f8d18a" stroke-width="5" stroke-linecap="round"/>
+                <path d="M85 19 Q89 8 105 5" fill="none" stroke="#426b36" stroke-width="8" stroke-linecap="round"/>
+                <path d="M80 21 Q70 7 56 12 Q67 25 80 21Z" fill="#4c8b4e"/>
+              </svg>
+              <svg class="bar" viewBox="0 0 100 120" role="img" aria-label="Tablette de chocolat">
+                <path d="M12 9 Q12 3 19 3 H83 Q90 3 90 10 V109 Q90 116 83 116 H18 Q11 116 11 109Z" fill="#542719" stroke="#3a1b13" stroke-width="4"/>
+                <g fill="#98512f" stroke="#c17a48" stroke-width="2">
+                  <rect x="20" y="14" width="27" height="25" rx="4"/><rect x="53" y="14" width="28" height="25" rx="4"/>
+                  <rect x="20" y="45" width="27" height="25" rx="4"/><rect x="53" y="45" width="28" height="25" rx="4"/>
+                  <rect x="20" y="76" width="27" height="25" rx="4"/><rect x="53" y="76" width="28" height="25" rx="4"/>
+                </g>
+              </svg>
+            </div>
             <h3>⚙️ ${escapeHtml(machine.name)}</h3>
-
-            <p class="machine-price">
-                Prix : ${money(machine.price)}
-            </p>
-
-            <p class="machine-earning">
-                💰 Gain journalier :
-                ${money(machine.daily_earning)}
-            </p>
-
-            <button
-                class="btn-primary"
-                onclick="selectMachine(${machine.id})">
-
-                Choisir cette machine
-
-            </button>
-
+            <p class="machine-price">Prix : ${money(machine.price)}</p>
+            <p class="machine-earning">💰 Gain journalier : ${money(machine.daily_earning)}</p>
+            <button class="btn-primary" onclick="selectMachine(${machine.id})">Choisir cette machine</button>
         `;
 
         container.appendChild(div);
@@ -2457,10 +2525,93 @@ async function loadAdminProfiles(){
 
 
 /* =========================================================
+   TABLEAU DE BORD ADMINISTRATEUR — PARRAINAGE
+========================================================= */
+async function loadAdminReferralDashboard(){
+    const statsEl = document.getElementById("adminReferralStats");
+    const sponsorsEl = document.getElementById("adminReferralBySponsor");
+    const historyEl = document.getElementById("adminReferralHistory");
+    if(!statsEl || !sponsorsEl || !historyEl) return;
+    statsEl.textContent = "Chargement des statistiques...";
+    sponsorsEl.textContent = "Chargement...";
+    historyEl.textContent = "Chargement...";
+
+    const [profilesResult, commissionsResult, depositsResult] = await Promise.all([
+        supabaseClient.from("profiles").select("id,full_name,referral_code,referred_by,created_at"),
+        supabaseClient.from("referral_commissions").select("id,inviter_id,invitee_id,deposit_id,base_amount,commission_amount,created_at").order("created_at",{ascending:false}),
+        supabaseClient.from("deposits").select("id,user_id,amount,status,created_at")
+    ]);
+    const err = profilesResult.error || commissionsResult.error || depositsResult.error;
+    if(err){
+        const msg = `<p class="notice">Impossible de charger le tableau de parrainage : ${escapeHtml(err.message)}. Vérifie les droits de lecture administrateur dans Supabase.</p>`;
+        statsEl.innerHTML = msg; sponsorsEl.innerHTML = msg; historyEl.innerHTML = msg;
+        return;
+    }
+    const profiles = profilesResult.data || [];
+    const commissions = commissionsResult.data || [];
+    const deposits = depositsResult.data || [];
+    const profileById = new Map(profiles.map(p=>[p.id,p]));
+    const referredProfiles = profiles.filter(p=>p.referred_by);
+    const sponsorIds = [...new Set(referredProfiles.map(p=>p.referred_by))];
+    const totalCommissions = commissions.reduce((sum,c)=>sum+Number(c.commission_amount||0),0);
+    const validatedDeposits = deposits.filter(d=>d.status === "validated");
+    const referredIds = new Set(referredProfiles.map(p=>p.id));
+    const referredValidatedDeposits = validatedDeposits.filter(d=>referredIds.has(d.user_id));
+    const referredDepositTotal = referredValidatedDeposits.reduce((sum,d)=>sum+Number(d.amount||0),0);
+
+    statsEl.innerHTML = `
+      <div class="admin-referral-stat"><span>👥 Parrains actifs</span><strong>${sponsorIds.length}</strong></div>
+      <div class="admin-referral-stat"><span>🌱 Filleuls inscrits</span><strong>${referredProfiles.length}</strong></div>
+      <div class="admin-referral-stat"><span>💳 Dépôts validés des filleuls</span><strong>${money(referredDepositTotal)}</strong></div>
+      <div class="admin-referral-stat"><span>🍫 Commissions distribuées</span><strong>${money(totalCommissions)}</strong></div>`;
+
+    const bySponsor = new Map();
+    referredProfiles.forEach(p=>{
+        if(!bySponsor.has(p.referred_by)) bySponsor.set(p.referred_by,{profile:profileById.get(p.referred_by),filleuls:[],depositTotal:0,commissionTotal:0,commissionCount:0});
+        bySponsor.get(p.referred_by).filleuls.push(p);
+    });
+    referredValidatedDeposits.forEach(d=>{
+        const child=profileById.get(d.user_id);
+        if(child && bySponsor.has(child.referred_by)) bySponsor.get(child.referred_by).depositTotal += Number(d.amount||0);
+    });
+    commissions.forEach(c=>{
+        if(!bySponsor.has(c.inviter_id)) bySponsor.set(c.inviter_id,{profile:profileById.get(c.inviter_id),filleuls:[],depositTotal:0,commissionTotal:0,commissionCount:0});
+        const row=bySponsor.get(c.inviter_id); row.commissionTotal += Number(c.commission_amount||0); row.commissionCount++;
+    });
+    const sponsorRows=[...bySponsor.entries()].sort((a,b)=>b[1].commissionTotal-a[1].commissionTotal);
+    const maxCommission=Math.max(1,...sponsorRows.map(x=>x[1].commissionTotal));
+    if(!sponsorRows.length){
+        sponsorsEl.innerHTML="<p>Aucun parrain ni filleul enregistré pour le moment.</p>";
+    }else{
+        let html=`<div class="table-wrap"><table><tr><th>Parrain</th><th>Code</th><th>Filleuls</th><th>Dépôts validés</th><th>Commissions</th><th>Progression</th></tr>`;
+        sponsorRows.forEach(([id,row])=>{
+            const name=row.profile?.full_name || "Compte parrain";
+            const code=row.profile?.referral_code || "—";
+            const pct=Math.round(row.commissionTotal/maxCommission*100);
+            html+=`<tr><td>${escapeHtml(name)}</td><td>${escapeHtml(code)}</td><td>${row.filleuls.length}</td><td>${money(row.depositTotal)}</td><td><strong>${money(row.commissionTotal)}</strong></td><td><div class="referral-bar"><span style="width:${pct}%"></span></div></td></tr>`;
+        });
+        html+="</table></div>"; sponsorsEl.innerHTML=html;
+    }
+    if(!commissions.length){
+        historyEl.innerHTML="<p>Aucune commission distribuée pour le moment.</p>";
+    }else{
+        let html=`<div class="table-wrap"><table><tr><th>Date</th><th>Parrain</th><th>Filleul</th><th>Dépôt éligible</th><th>Commission</th></tr>`;
+        commissions.forEach(c=>{
+            const sponsor=profileById.get(c.inviter_id); const child=profileById.get(c.invitee_id);
+            const date=c.created_at?new Date(c.created_at).toLocaleDateString("fr-FR"):"—";
+            html+=`<tr><td>${escapeHtml(date)}</td><td>${escapeHtml(sponsor?.full_name||"—")}</td><td>${escapeHtml(child?.full_name||"—")}</td><td>${money(c.base_amount)}</td><td><strong>${money(c.commission_amount)}</strong></td></tr>`;
+        });
+        html+="</table></div>"; historyEl.innerHTML=html;
+    }
+}
+
+/* =========================================================
    ADMIN TOUT CHARGER
 ========================================================= */
 
 async function loadAdminData(){
+
+    await loadAdminReferralDashboard();
 
     await loadAdminDeposits();
 
