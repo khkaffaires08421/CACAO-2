@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -305,6 +304,31 @@ footer{
     color:white;
 }
 
+/* Parrainage et estimation des retraits */
+.referral-box{
+    background:linear-gradient(135deg,#e8f7ee,#ffffff);
+    border:1px solid #198754;
+    border-radius:12px;
+    padding:18px;
+    margin:18px 0;
+}
+.referral-link{
+    width:100%;
+    padding:11px;
+    border:1px solid #cbd5d1;
+    border-radius:8px;
+    background:#fff;
+    color:#222;
+}
+.fee-summary{
+    background:#fff8e6;
+    border:1px solid #f0c36d;
+    border-radius:10px;
+    padding:13px;
+    margin:12px 0;
+    line-height:1.8;
+}
+.fee-summary strong{color:#198754}
 @media(max-width:600px){
 
     .container{
@@ -394,6 +418,10 @@ footer{
         <label>Email</label>
         <input type="email" id="registerEmail"
                placeholder="Votre email">
+
+        <label>Code de parrainage (facultatif)</label>
+        <input type="text" id="registerReferralCode"
+               placeholder="Code communiqué par votre parrain">
 
         <label>Mot de passe</label>
         <input type="password" id="registerPassword"
@@ -519,6 +547,21 @@ footer{
 
     </div>
 
+    <div class="card referral-box">
+        <h2>🤝 Mon parrainage CACAO-2</h2>
+        <p>Partagez votre code. Lorsqu’un nouveau membre s’inscrit avec ce code et que son premier dépôt est validé, votre commission est créditée sur votre solde.</p>
+        <p><strong>Mon code :</strong> <span id="myReferralCode">Chargement...</span></p>
+        <label>Mon lien de parrainage</label>
+        <input class="referral-link" id="myReferralLink" type="text" readonly>
+        <button class="btn-primary" type="button" onclick="copyReferralLink()">📋 Copier mon lien</button>
+        <div class="stats" style="margin-top:12px;">
+            <div class="stat">👥 Parrainages rémunérés<strong id="referralCount">0</strong></div>
+            <div class="stat">💰 Total des commissions<strong id="referralTotal">0 FCFA</strong></div>
+        </div>
+        <h3>📑 Mes commissions de parrainage</h3>
+        <div id="myReferralCommissions">Chargement...</div>
+        <div id="referralMessage"></div>
+    </div>
 
     <div class="stats">
 
@@ -689,8 +732,14 @@ footer{
                id="withdrawAmount"
                min="2500"
                step="100"
-               placeholder="Exemple : 2600">
+               placeholder="Exemple : 2600"
+               oninput="updateWithdrawalEstimate()">
 
+        <div class="fee-summary" id="withdrawalEstimate">
+            Montant demandé : <strong>0 FCFA</strong><br>
+            Frais (20 %) : 0 FCFA<br>
+            Net à recevoir : <strong>0 FCFA</strong>
+        </div>
 
         <label>Mode de paiement</label>
 
@@ -963,6 +1012,9 @@ async function registerUser(){
     const password =
         document.getElementById("registerPassword").value;
 
+    const referralCode =
+        document.getElementById("registerReferralCode").value.trim().toUpperCase();
+
     if(!name || !phone || !email || !password){
 
         message(
@@ -986,7 +1038,8 @@ async function registerUser(){
                 options:{
                     data:{
                         full_name:name,
-                        phone:phone
+                        phone:phone,
+                        referral_code:referralCode
                     }
                 }
 
@@ -1004,6 +1057,7 @@ async function registerUser(){
         document.getElementById("registerPhone").value="";
         document.getElementById("registerEmail").value="";
         document.getElementById("registerPassword").value="";
+        document.getElementById("registerReferralCode").value="";
 
     }
     catch(error){
@@ -1087,6 +1141,74 @@ async function logoutUser(){
 
 
 /* =========================================================
+   PARRAINAGE
+========================================================= */
+
+function prefillReferralCode(){
+    try{
+        const params = new URLSearchParams(window.location.search);
+        const code = (params.get("ref") || "").trim().toUpperCase();
+        const field = document.getElementById("registerReferralCode");
+        if(field && code) field.value = code;
+    }catch(error){ console.warn("Lien de parrainage non lu :", error); }
+}
+
+async function copyReferralLink(){
+    const field = document.getElementById("myReferralLink");
+    if(!field || !field.value){
+        message("referralMessage","Votre lien de parrainage n'est pas encore disponible.","error");
+        return;
+    }
+    try{
+        await navigator.clipboard.writeText(field.value);
+        message("referralMessage","Lien de parrainage copié. Vous pouvez le partager.","success");
+    }catch(error){
+        field.focus();
+        field.select();
+        message("referralMessage","La copie automatique est indisponible. Sélectionnez le lien puis copiez-le.","error");
+    }
+}
+
+async function loadMyReferralCommissions(){
+    if(!currentUser || !currentProfile) return;
+    const code = (currentProfile.referral_code || "").toString().trim();
+    const codeNode = document.getElementById("myReferralCode");
+    const linkNode = document.getElementById("myReferralLink");
+    if(codeNode) codeNode.textContent = code || "Non attribué";
+    if(linkNode){
+        linkNode.value = code ? (window.location.origin + window.location.pathname + "?ref=" + encodeURIComponent(code)) : "";
+    }
+
+    const container = document.getElementById("myReferralCommissions");
+    if(!container) return;
+    const {data,error} = await supabaseClient
+        .from("referral_commissions")
+        .select("id,deposit_id,base_amount,commission_amount,created_at")
+        .eq("inviter_id",currentUser.id)
+        .order("id",{ascending:false});
+    if(error){
+        console.error("Erreur commissions de parrainage :",error);
+        container.innerHTML = `<p class="error">Impossible de charger les commissions : ${escapeHtml(error.message)}</p>`;
+        return;
+    }
+    const rows = data || [];
+    const total = rows.reduce((sum,row)=>sum + Number(row.commission_amount || 0),0);
+    document.getElementById("referralCount").textContent = String(rows.length);
+    document.getElementById("referralTotal").textContent = money(total);
+    if(!rows.length){
+        container.innerHTML = "<p>Aucune commission de parrainage pour le moment.</p>";
+        return;
+    }
+    let html = `<table><tr><th>Date</th><th>Dépôt éligible</th><th>Commission créditée</th></tr>`;
+    rows.forEach(row=>{
+        const date = row.created_at ? new Date(row.created_at).toLocaleDateString("fr-FR") : "—";
+        html += `<tr><td>${escapeHtml(date)}</td><td>${money(row.base_amount)}</td><td><strong>${money(row.commission_amount)}</strong></td></tr>`;
+    });
+    html += "</table>";
+    container.innerHTML = html;
+}
+
+/* =========================================================
    INITIALISATION
 ========================================================= */
 
@@ -1141,6 +1263,8 @@ async function initializeUser(){
         await loadMyDeposits();
 
         await loadMyWithdrawals();
+
+        await loadMyReferralCommissions();
 
         updateDashboard();
 
@@ -1617,6 +1741,10 @@ async function loadMyDeposits(){
 
                 <td>${money(item.amount)}</td>
 
+                <td>${item.fee_amount == null ? "—" : money(item.fee_amount)}</td>
+
+                <td>${item.net_amount == null ? "—" : money(item.net_amount)}</td>
+
                 <td>${escapeHtml(item.payment_method || "")}</td>
 
                 <td>${escapeHtml(item.payment_reference || "")}</td>
@@ -1635,6 +1763,17 @@ async function loadMyDeposits(){
 
 }
 
+
+function updateWithdrawalEstimate(){
+    const amount = Number(document.getElementById("withdrawAmount").value || 0);
+    const valid = Number.isFinite(amount) && amount > 0;
+    const fee = valid ? Math.round(amount * 0.20) : 0;
+    const net = valid ? amount - fee : 0;
+    const box = document.getElementById("withdrawalEstimate");
+    if(box){
+        box.innerHTML = `Montant demandé : <strong>${money(valid ? amount : 0)}</strong><br>Frais (20 %) : ${money(fee)}<br>Net à recevoir : <strong>${money(net)}</strong>`;
+    }
+}
 
 /* =========================================================
    RETRAIT
@@ -1745,9 +1884,11 @@ async function submitWithdrawal(){
 
         if(error) throw error;
 
+        const fee = Math.round(amount * 0.20);
+        const net = amount - fee;
         message(
             "withdrawMessage",
-            "Votre demande de retrait a été enregistrée et est en attente de validation par l'administrateur.",
+            `Demande enregistrée et en attente de validation. Frais (20 %) : ${money(fee)}. Montant net à recevoir : ${money(net)}.`,
             "success"
         );
 
@@ -1762,6 +1903,7 @@ async function submitWithdrawal(){
         document.getElementById(
             "withdrawPaymentNumber"
         ).value = "";
+        updateWithdrawalEstimate();
 
         await updateMyEarnings();
 
@@ -1828,7 +1970,9 @@ async function loadMyWithdrawals(){
 
         <tr>
             <th>ID</th>
-            <th>Montant</th>
+            <th>Montant demandé</th>
+            <th>Frais 20 %</th>
+            <th>Net à recevoir</th>
             <th>Mode</th>
             <th>Numéro</th>
             <th>Statut</th>
@@ -2089,7 +2233,9 @@ async function loadAdminWithdrawals(){
         <tr>
             <th>ID</th>
             <th>Utilisateur</th>
-            <th>Montant</th>
+            <th>Montant demandé</th>
+            <th>Frais 20 %</th>
+            <th>Net à payer</th>
             <th>Mode</th>
             <th>Numéro</th>
             <th>Statut</th>
@@ -2136,6 +2282,10 @@ async function loadAdminWithdrawals(){
                 <td>${escapeHtml(item.user_id || "")}</td>
 
                 <td>${money(item.amount)}</td>
+
+                <td>${item.fee_amount == null ? "—" : money(item.fee_amount)}</td>
+
+                <td>${item.net_amount == null ? "—" : money(item.net_amount)}</td>
 
                 <td>${escapeHtml(item.payment_method || "")}</td>
 
@@ -2439,10 +2589,11 @@ supabaseClient.auth.onAuthStateChange(
    LANCEMENT
 ========================================================= */
 
+prefillReferralCode();
+updateWithdrawalEstimate();
 startApp();
 
 </script>
 
 </body>
 </html>
-```
