@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<link rel="manifest" href="/CACAO-2/manifest.json">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -444,12 +443,11 @@ tr:nth-child(even) td{background:#fffaf3}
 
     <div class="card">
 
-        <h3>⚠️ Information importante</h3>
+        <h3>⚠️ INFORMATION IMPORTANTE</h3>
 
         <div class="warning">
-            Les paramètres de rémunération affichés dans cette application
-            sont des paramètres de démonstration. Ils ne constituent pas
-            une garantie de rendement financier.
+            Investissez pour profiter des bienfaits du cacao.
+            Investissez avec intelligence !
         </div>
 
     </div>
@@ -611,9 +609,14 @@ tr:nth-child(even) td{background:#fffaf3}
         <input class="referral-link" id="myReferralLink" type="text" readonly>
         <button class="btn-primary" type="button" onclick="copyReferralLink()">📋 Copier mon lien</button>
         <div class="stats" style="margin-top:12px;">
-            <div class="stat">👥 Parrainages rémunérés<strong id="referralCount">0</strong></div>
+            <div class="stat">📑 Commissions enregistrées<strong id="referralCount">0</strong></div>
             <div class="stat">💰 Total des commissions<strong id="referralTotal">0 FCFA</strong></div>
         </div>
+        <h3>🌱 Mes filleuls</h3>
+        <div id="myReferralStats" class="admin-referral-grid">
+            Chargement des statistiques de vos filleuls...
+        </div>
+        <div id="myReferralList">Chargement de vos filleuls...</div>
         <h3>📑 Mes commissions de parrainage</h3>
         <div id="myReferralCommissions">Chargement...</div>
         <div id="referralMessage"></div>
@@ -767,6 +770,8 @@ tr:nth-child(even) td{background:#fffaf3}
 
                 <li>Montant minimum : 2 500 FCFA.</li>
 
+                <li>Montant maximum par demande : 25 000 FCFA.</li>
+
                 <li>Le montant doit être un multiple de 100 FCFA.</li>
 
                 <li>Paiement uniquement par Wave ou MTN Mobile Money.</li>
@@ -787,8 +792,9 @@ tr:nth-child(even) td{background:#fffaf3}
         <input type="number"
                id="withdrawAmount"
                min="2500"
+               max="25000"
                step="100"
-               placeholder="Exemple : 2600"
+               placeholder="Entre 2 500 et 25 000 FCFA"
                oninput="updateWithdrawalEstimate()">
 
         <div class="fee-summary" id="withdrawalEstimate">
@@ -1279,6 +1285,62 @@ async function loadMyReferralCommissions(){
 }
 
 /* =========================================================
+   TABLEAU DE BORD PERSONNEL DES FILLEULS
+========================================================= */
+async function loadMyReferralDashboard(){
+    const statsEl = document.getElementById("myReferralStats");
+    const listEl = document.getElementById("myReferralList");
+    if(!statsEl || !listEl || !currentUser) return;
+
+    statsEl.textContent = "Chargement des statistiques...";
+    listEl.textContent = "Chargement de vos filleuls...";
+
+    const {data,error} = await supabaseClient.rpc("get_my_referral_dashboard");
+    if(error){
+        console.error("Erreur tableau de bord des filleuls :",error);
+        const msg = `Impossible de charger vos filleuls : ${escapeHtml(error.message)}`;
+        statsEl.innerHTML = `<p class="error">${msg}</p>`;
+        listEl.innerHTML = "";
+        return;
+    }
+
+    const rows = data || [];
+    const totalFilleuls = rows.length;
+    const actifs = rows.filter(r => Number(r.depots_valides || 0) > 0).length;
+    const depotsValides = rows.reduce((sum,r) => sum + Number(r.depots_valides || 0),0);
+    const totalDepose = rows.reduce((sum,r) => sum + Number(r.total_depose || 0),0);
+    const totalCommissions = rows.reduce((sum,r) => sum + Number(r.total_commissions || 0),0);
+
+    statsEl.innerHTML = `
+      <div class="admin-referral-stat"><span>👥 Filleuls inscrits</span><strong>${totalFilleuls}</strong></div>
+      <div class="admin-referral-stat"><span>🌿 Filleuls actifs</span><strong>${actifs}</strong></div>
+      <div class="admin-referral-stat"><span>💳 Dépôts validés</span><strong>${depotsValides}</strong></div>
+      <div class="admin-referral-stat"><span>💰 Total déposé</span><strong>${money(totalDepose)}</strong></div>
+      <div class="admin-referral-stat"><span>🍫 Mes commissions</span><strong>${money(totalCommissions)}</strong></div>`;
+
+    if(!rows.length){
+        listEl.innerHTML = "<p>Vous n'avez pas encore de filleul inscrit avec votre code.</p>";
+        return;
+    }
+
+    let html = `<div class="table-wrap"><table><thead><tr>
+      <th>Filleul</th><th>Inscription</th><th>Dépôts validés</th><th>Total déposé</th><th>Commissions</th>
+      </tr></thead><tbody>`;
+    rows.forEach(row => {
+        const date = row.date_inscription ? new Date(row.date_inscription).toLocaleDateString("fr-FR") : "—";
+        html += `<tr>
+          <td>${escapeHtml(row.filleul || "—")}</td>
+          <td>${escapeHtml(date)}</td>
+          <td>${Number(row.depots_valides || 0)}</td>
+          <td>${money(row.total_depose)}</td>
+          <td><strong>${money(row.total_commissions)}</strong></td>
+        </tr>`;
+    });
+    html += `</tbody></table></div>`;
+    listEl.innerHTML = html;
+}
+
+/* =========================================================
    INITIALISATION
 ========================================================= */
 
@@ -1335,6 +1397,8 @@ async function initializeUser(){
         await loadMyWithdrawals();
 
         await loadMyReferralCommissions();
+
+        await loadMyReferralDashboard();
 
         updateDashboard();
 
@@ -1906,6 +1970,18 @@ async function submitWithdrawal(){
         message(
             "withdrawMessage",
             "Le retrait minimum est de 2 500 FCFA.",
+            "error"
+        );
+
+        return;
+
+    }
+
+    if(amount > 25000){
+
+        message(
+            "withdrawMessage",
+            "Le retrait maximum autorisé par demande est de 25 000 FCFA.",
             "error"
         );
 
